@@ -20,3 +20,9 @@ To try chatting with the system, simply run `Chatter.py`. This demos both the st
 ```
 > python Chatter.py
 ```
+
+### Listener Demo
+To try talking to the system, but with response in text form, run "Listener.py". 
+---
+> python Listener.py
+---

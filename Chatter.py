@@ -3,6 +3,8 @@ import openai
 class Chatter:
     def __init__(self, base_prompt = "You are a humanoid NAO robot", stream = False, chat_horison: int = 10, filt_horison: int = 5):
         """
+        Creates a Chatter object for natural multi-human single-robot conversations
+
         Args:
             base_prompt (str): The description of the system's role
             stream (bool): If the answers should be yielded in tokens or returned as a full string
@@ -22,7 +24,6 @@ class Chatter:
             } ]
         self.filt_horison = filt_horison
 
-    # Generate a response to the last chat_horison messages saved.
     def get_response(self) -> str:
         """
         Return a response based on the last chat_horison messages
@@ -37,7 +38,6 @@ class Chatter:
         ).choices[0].message.content
         return response
 
-    # Yield the responses
     def stream_response(self) -> "Generator[str,None,None]":
         """
         Yields a response based on the last chat_horison messages
