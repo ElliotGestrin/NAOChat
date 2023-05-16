@@ -110,11 +110,11 @@ class Chatter:
             return ""
                 
 if __name__ == "__main__":
-    eng_intro = "You are the humanoid robot Ellis. A NAO model robot built by Softbank and programmed by FIA Robotics. Your task is to hold an interesting conversation with a group of humans."
-    swe_intro = "Du är den mänskliga roboten Ellis. En NAO-modellrobot byggd av Softbank och programmerad av FIA Robotics. Din uppgift är att hålla en intressant konversation med en grupp människor."
-    stream_bot = Chatter(base_prompt=swe_intro,stream=True)
-    chunk_bot = Chatter(base_prompt=swe_intro)
-    print(chunk_bot.stream)
+    name = "Alice"
+    eng_intro = f"You are the humanoid robot {name}. A NAO model robot built by Softbank and programmed by FIA Robotics. Your task is to hold an interesting conversation with a group of humans."
+    swe_intro = f"Du är den mänskliga roboten {name}. En NAO-modellrobot byggd av Softbank och programmerad av FIA Robotics. Din uppgift är att hålla en intressant konversation med en grupp människor."
+    stream_bot = Chatter(base_prompt=swe_intro,stream=True,name=name)
+    chunk_bot = Chatter(base_prompt=swe_intro,name=name)
     while True:
         message = input("User: ")
         # Stream bot first
