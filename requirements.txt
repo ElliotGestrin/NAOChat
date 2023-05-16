@@ -21,7 +21,9 @@ charset-normalizer==3.1.0
     #   aiohttp
     #   requests
 click==8.1.3
-    # via pip-tools
+    # via
+    #   gtts
+    #   pip-tools
 colorama==0.4.6
     # via
     #   build
@@ -31,6 +33,8 @@ frozenlist==1.3.3
     # via
     #   aiohttp
     #   aiosignal
+gtts==2.3.2
+    # via -r .\requirements.in
 idna==3.4
     # via
     #   requests
@@ -45,10 +49,15 @@ packaging==23.1
     # via build
 pip-tools==6.13.0
     # via -r .\requirements.in
+pyaudio==0.2.13
+    # via -r .\requirements.in
+pydub==0.25.1
+    # via -r .\requirements.in
 pyproject-hooks==1.0.0
     # via build
 requests==2.30.0
     # via
+    #   gtts
     #   openai
     #   speechrecognition
 speechrecognition==3.10.0
