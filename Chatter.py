@@ -1,7 +1,7 @@
 import openai
 
 class Chatter:
-    def __init__(self, base_prompt = "You are a humanoid NAO robot", stream = False, chat_horison: int = 10, filt_horison: int = 5):
+    def __init__(self, base_prompt = "You are a humanoid NAO robot", stream = False, chat_horison: int = 10, filt_horison: int = 5, name: str = "asssistant"):
         """
         Creates a Chatter object for natural multi-human single-robot conversations
 
@@ -9,7 +9,8 @@ class Chatter:
             base_prompt (str): The description of the system's role
             stream (bool): If the answers should be yielded in tokens or returned as a full string
             chat_horison (int): How many messages are used for the next response
-            filt_horison (int): How many messages are used to decide if to respond  
+            filt_horison (int): How many messages are used to decide if to respond
+            name (str): What the system is called when spoken to
         """
         if not openai.api_key:
             openai.api_key = open("openai.key").read().strip()
@@ -20,9 +21,10 @@ class Chatter:
         self.chat_horison = chat_horison
         self.filt_base = [{
             "role": "system", 
-            "content": "You will be given a conversation between a group of humans, user, and a robot called assistant. Your task is to conclude if the last message from the humans is directed at the assistant or to themselves. If it's directed at the humans respond only with 'HUMANS'. If it's directed at the assistant respond only with 'ASSISTANT'. If it could be answered by either, respond with 'BOTH'."
+            "content": f"You will be given a conversation between a group of humans, user, and a robot called {name}. Your task is to conclude if the last message from the humans is directed at {name} or to themselves. If it's directed at the humans respond only with 'HUMANS'. If it's directed at the assistant respond only with '{name.upper()}'. If it could be answered by either, respond with 'BOTH'."
             } ]
         self.filt_horison = filt_horison
+        self.name = name
 
     def get_response(self) -> str:
         """
@@ -62,14 +64,16 @@ class Chatter:
         Returns:
             bool : Wheter to respond or not
         """
-        joined_messages = "\n ".join([m["role"] + ": " + m["content"] for m in self.messages[-min(len(self.messages), self.filt_horison):]])
+        joined_messages = "\n ".join(
+            [(m["role"] if m["role"] != "assistant" else self.name) + ": " + m["content"] for m in self.messages[-min(len(self.messages), self.filt_horison):]]
+        )
         response = openai.ChatCompletion.create(
             model=self.NLP_model, 
             messages=self.filt_base + [{"role": "user", "content": joined_messages}],
             temperature=0,
             max_tokens=5
         ).choices[0].message.content.upper()
-        return "ASSISTANT" in response or "BOTH" in response
+        return self.name.upper() in response or "BOTH" in response
     
     def __call__(self, message: str) -> str:
         

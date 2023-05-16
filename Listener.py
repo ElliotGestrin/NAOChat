@@ -15,6 +15,8 @@ class Listener():
         self.r = sr.Recognizer()
         self.language = language
         self.use_whisper = use_whisper
+        if use_whisper and not openai.api_key:
+            openai.api_key = open("openai.key").read().strip()
         if default_mic:
             self.mic = sr.Microphone()
         else:
@@ -61,7 +63,7 @@ if __name__ == "__main__":
     from Chatter import Chatter
     swe_intro = "Du är den mänskliga roboten Alice. En NAO-modellrobot byggd av Softbank och programmerad av FIA Robotics. Din uppgift är att hålla en intressant konversation med en grupp människor."
     eng_intro = "You are the humanoid robot Alice. A NAO model robot built by Softbank and programmed by FIA Robotics. Your task is to hold an interesting conversation with a group of humans."
-    chatter = Chatter(swe_intro)
+    chatter = Chatter(swe_intro,stream=True,name="Alice")
     listener = Listener("sv") # Change to 'en' for english
     while(True):
         heard = listener()
