@@ -21,7 +21,7 @@ RUN tar -xf pynaoqi-python2.7-2.8.6.23-linux64-20191127_152327.tar.gz -C /app
 # Remove tar file
 RUN rm pynaoqi-python2.7-2.8.6.23-linux64-20191127_152327.tar.gz
 
-RUN mv pynaoqi-python2.7-2.8.6.23-linux64-20191127_152327 Nao-python2.7-sdk
+RUN mv pynaoqi-python2.7-2.8.6.23-linux64-20191127_152327 nao-python2.7-sdk
 
 #RUN mv pynaoqi-python2.7-2.8.6.23-linux64-20191127_152327.tar.gz renamed.tar.gz
 # Set working directory
@@ -39,5 +39,8 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 COPY . .
 
 
+
 # Need to make this script run when container is started, maybe from command in docker-compose.yml?
+
+#RUN chmod +x ./activate.sh
 #RUN sh -c ./activate.sh
