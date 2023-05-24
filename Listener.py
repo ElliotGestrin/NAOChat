@@ -1,5 +1,6 @@
 import openai
 import speech_recognition as sr
+import sounddevice
 from io import BytesIO
 
 class Listener():
