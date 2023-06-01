@@ -1,15 +1,15 @@
 import openai
 
 class Chatter:
-    def __init__(self, base_prompt = "You are a humanoid NAO robot", stream = False, chat_horison: int = 10, filt_horison: int = 5, name: str = "asssistant"):
+    def __init__(self, base_prompt = "You are a humanoid robot", stream = False, chat_horison: int = 10, filt_horison: int = 5, name: str = "asssistant"):
         """
         Creates a Chatter object for natural multi-human single-robot conversations
 
         Args:
             base_prompt (str): The description of the system's role
             stream (bool): If the answers should be yielded in tokens or returned as a full string
-            chat_horison (int): How many messages are used for the next response
-            filt_horison (int): How many messages are used to decide if to respond
+            chat_horison (int): How many messages are used for the next response. 1 uses only last message. Chatter responses are counted.
+            filt_horison (int): How many messages are used to decide if to respond. A value <= 0 turns of filtering
             name (str): What the system is called when spoken to
         """
         if not openai.api_key:
@@ -21,7 +21,7 @@ class Chatter:
         self.chat_horison = chat_horison
         self.filt_base = [{
             "role": "system", 
-            "content": f"You will be given a conversation between a group of humans, user, and a robot called {name}. Your task is to conclude if the last message from the humans is directed at {name} or to themselves. If it's directed at the humans respond only with 'HUMANS'. If it's directed at the assistant respond only with '{name.upper()}'. If it could be answered by either, respond with 'BOTH'."
+            "content": f"You will be given a conversation between a group of humans, user, and a robot called {name}. Your task is to conclude if the last message from the humans is directed at {name} or to themselves. If it's directed at the humans respond only with 'HUMANS'. If it's directed at {name} respond only with '{name.upper()}'. If it could be answered by either, respond with 'BOTH'."
             } ]
         self.filt_horison = filt_horison
         self.name = name
@@ -36,7 +36,7 @@ class Chatter:
         response = openai.ChatCompletion.create(
             model=self.NLP_model, 
             messages=self.chat_base + self.messages[-min(len(self.messages), self.chat_horison):],
-            temperature=1
+            temperature=0.5
         ).choices[0].message.content
         return response
 
@@ -48,22 +48,24 @@ class Chatter:
         Returns:
             Generator[str,None,None] : Yields the tokenised response
         """
+        print("Sending new response to server")
         for chunk in openai.ChatCompletion.create(
             model=self.NLP_model, 
             messages=self.chat_base + self.messages[-min(len(self.messages), self.chat_horison):],
-            temperature=1.4,
+            temperature=0.5,
             stream = True
         ):
             yield chunk.choices[0].delta.get("content","")
     
     def should_respond(self) -> bool:
         """
-        Concludes if NAO should reply to the last received message
-        Based on the last filt_horison messages.
+        Concludes if Chatter should reply to the last received message
+        Based on the last filt_horison messages. Setting filt_horison <= 0 turns of filtering
 
         Returns:
             bool : Wheter to respond or not
         """
+        if(self.filt_horison <= 0): return True
         joined_messages = "\n ".join(
             [(m["role"] if m["role"] != "assistant" else self.name) + ": " + m["content"] for m in self.messages[-min(len(self.messages), self.filt_horison):]]
         )
@@ -106,13 +108,13 @@ class Chatter:
                     yield chunk
                 self.messages.append({"role": "assistant", "content": response})
             return res(self)
-        except: # In case the model is overloaded
-            return ""
+        except KeyError as KE: # In case the model is overloaded
+            return f"{KE}"
                 
 if __name__ == "__main__":
-    name = "Alice"
-    eng_intro = f"You are the humanoid robot {name}. A NAO model robot built by Softbank and programmed by FIA Robotics. Your task is to hold an interesting conversation with a group of humans."
-    swe_intro = f"Du är den mänskliga roboten {name}. En NAO-modellrobot byggd av Softbank och programmerad av FIA Robotics. Din uppgift är att hålla en intressant konversation med en grupp människor."
+    name = "Pepper"
+    swe_intro = f"Du är den mänskliga roboten {name}. En NAO-modellrobot byggd av Softbank och programmerad av FIA Robotics. Din uppgift är att hålla en intressant konversation med en grupp människor. Du får max svara med två meningar."
+    eng_intro = f"You are the humanoid robot {name}. A NAO model robot built by Softbank and programmed by FIA Robotics. Your task is to hold an interesting conversation with a group of humans. You can at most answer with two sentences"
     stream_bot = Chatter(base_prompt=swe_intro,stream=True,name=name)
     chunk_bot = Chatter(base_prompt=swe_intro,name=name)
     while True:

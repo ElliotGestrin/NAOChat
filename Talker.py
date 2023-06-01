@@ -63,11 +63,11 @@ class LocalTalker(Talker):
 if __name__ == "__main__":
     from Chatter import Chatter
     from Listener import Listener
-    name = "Alice"
-    swe_intro = f"Du är den mänskliga roboten {name}. En NAO-modellrobot byggd av Softbank och programmerad av FIA Robotics. Din uppgift är att hålla en intressant konversation med en grupp människor."
-    eng_intro = f"You are the humanoid robot {name}. A NAO model robot built by Softbank and programmed by FIA Robotics. Your task is to hold an interesting conversation with a group of humans."
+    name = "Pepper"
+    swe_intro = f"Du är den mänskliga roboten {name}. En NAO-modellrobot byggd av Softbank och programmerad av FIA Robotics. Din uppgift är att hålla en intressant konversation med en grupp människor. Du får max svara med två meningar."
+    eng_intro = f"You are the humanoid robot {name}. A NAO model robot built by Softbank and programmed by FIA Robotics. Your task is to hold an interesting conversation with a group of humans. You can at most answer with two sentences"
     chatter = Chatter(swe_intro, stream=True,chat_horison=5,filt_horison=3,name=name)
-    listener = Listener("sv",use_whisper=False) # Change to 'en' for english
+    listener = Listener("sv",use_whisper=False,default_mic=False) # Change to 'en' for english
     talker = LocalTalker("sv")
     while(True):
         heard = listener()

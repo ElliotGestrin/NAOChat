@@ -4,7 +4,7 @@ import sounddevice
 from io import BytesIO
 
 class Listener():
-    def __init__(self, language: str="en", default_mic: bool=False, use_whisper: bool = False):
+    def __init__(self, language: str="en", default_mic: bool=True, use_whisper: bool = False):
         """
         Creates a Listener object for speech-to-text
 
@@ -62,11 +62,11 @@ class Listener():
         
 if __name__ == "__main__":
     from Chatter import Chatter
-    name = "Alice"
-    swe_intro = f"Du är den mänskliga roboten {name}. En NAO-modellrobot byggd av Softbank och programmerad av FIA Robotics. Din uppgift är att hålla en intressant konversation med en grupp människor."
-    eng_intro = f"You are the humanoid robot {name}. A NAO model robot built by Softbank and programmed by FIA Robotics. Your task is to hold an interesting conversation with a group of humans."
-    chatter = Chatter(swe_intro,stream=True,name=name)
-    listener = Listener("sv") # Change to 'en' for english
+    name = "Pepper"
+    swe_intro = f"Du är den mänskliga roboten {name}. En NAO-modellrobot byggd av Softbank och programmerad av FIA Robotics. Din uppgift är att hålla en intressant konversation med en grupp människor. Du får max svara med två meningar."
+    eng_intro = f"You are the humanoid robot {name}. A NAO model robot built by Softbank and programmed by FIA Robotics. Your task is to hold an interesting conversation with a group of humans. You can at most answer with two sentences"
+    chatter = Chatter(eng_intro,stream=True,name=name)
+    listener = Listener(language="en",default_mic=False,use_whisper=False) # Change to 'sv' for english
     while(True):
         heard = listener()
         print(f"Heard: {heard}")

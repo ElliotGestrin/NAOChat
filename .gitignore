@@ -2,3 +2,7 @@ env
 *.key
 __pycache__
 venv
+nao-demo
+pynaoqi
+choregrapher
+py2_nao_source.sh
