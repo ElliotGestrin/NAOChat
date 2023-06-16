@@ -69,4 +69,4 @@ Each config file consists of parameters. You can change these during the call to
 Three notworthy parameters you can set for any config are: 
 - `talker=speaker` to use your computers speaker, 
 - `listener=mic` to use your computers microphone or 
-- `talker=NAO` and `ip=123.456.789` (replced with your NAO-IP) to talk from a NAO robot.
+- `talker=NAO` and `ip=123.456.789` (replaced with your NAO-IP) to talk from a NAO robot.
