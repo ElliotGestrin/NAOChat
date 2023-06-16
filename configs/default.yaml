@@ -1,0 +1,16 @@
+# A virtual assistant where you can easily change the mood
+talker: terminal
+listener: terminal
+stream: true
+language: en
+name: Mia
+print_listening: ""
+print_heard: ""
+mood: happy
+
+temp: 0.5
+chat_prompt: "You are the {mood} virtual assistant {name}"
+chat_horizon: 10
+chat_tokens: 500
+
+terminal_talker_prefix: "\n{name}: "

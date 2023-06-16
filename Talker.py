@@ -15,17 +15,18 @@ class Talker:
             to_say (str): The string to speak
         """
         if isinstance(to_say, str):
-            print(f"'{to_say}'")
-            self.say(to_say)
+            self.say(to_say, first=True, last=True)
         else: # If not a string, it's a string generator
             self.stream_say(to_say)
 
-    def say(self, to_say: str):
+    def say(self, to_say: str, first: bool = False, last: bool = False):
         """
         Speaks the string to_say
 
         Args:
             to_say (str): The string to speak
+            first (bool): Flag for the first message spoken at once
+            last (bool): Flag for the last message spoken at once
         """
     
         raise NotImplementedError
@@ -38,18 +39,28 @@ class Talker:
             to_say (str): The string to speak
         """
         res = ""
+        first = True
         for mes in to_say:
             res += mes
             while res.count('\n') >= 1:
                 pos = res.find('\n')
-                print(res[0:pos])
-                self.say(res[0:pos])
+                self.say(res[0:pos],first=first)
                 res = res[pos+1:]
-        print(res)
-        self.say(res)
+                first = False
+        self.say(res,first=first,last=True)
     
+class TerminalTalker(Talker):
+    def __init__(self, language: str = "en", prefix: str = "\nAssistant: "):
+        super().__init__(language=language)
+        self.prefix = prefix
+
+    def say(self, to_say: str, first: bool = False, last: bool = False):
+        if first: print(self.prefix + to_say)
+        else: print(to_say)
+        if last: print()
+
 class LocalTalker(Talker):
-    def say(self, to_say: str):
+    def say(self, to_say: str, first: bool = False, last: bool = False):
         try:
             audio = gTTS(to_say,lang=self.language)
             fp = BytesIO()

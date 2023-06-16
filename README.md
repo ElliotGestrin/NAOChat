@@ -48,27 +48,25 @@ linux > rm pynaoqi-python2.7-2.1.4.13-linux32.tar.gz
 ```
 ## Quickstart
 
-### Chat Demo
-To try chatting with the system, simply run `Chatter.py`. This demos both the streaming and full version.
-```
-> python Chatter.py
-```
+`main.py` implements a flexible system of premade configs. For further details on how to make your own, see [configs/README.md](./configs/README.md).
 
-### Listener Demo
-To try talking to the system, but with response in text form, run `Listener.py`.
-```
-> python Listener.py
-```
-
-### Talker Demo
-To try talking to the system with responses in audio, though not through a NAO, run `Talker.py`. This requires [FFmpeg](https://ffmpeg.org) to be installed.
+You can test the default via simply running `main.py`. This will let you talk to ChatGPT in the terminal.
 
 ```
-> python Talker.py
+> python main.py
 ```
 
-### NAOTalker Demo
-To talk to ChatGPT via external microphone and get responses through NAO, run `NAOTalker.py`. Note that this requires a linux system and that you follow the steps in [NAO Setup](#nao-setup).
+You can also swap config via setting the config parameter when calling. The following will give you an instance that only greets you, and only when you greet it first.
 ```
-linux > python Talker.py
+> python main.py config=greeter
 ```
+
+Each config file consists of parameters. You can change these during the call to `main.py`. This changes the mood and name of the default assistant.
+```
+> python main.py config=default name=Bob mood='southern and cheerfull'
+``` 
+
+Three notworthy parameters you can set for any config are: 
+- `talker=speaker` to use your computers speaker, 
+- `listener=mic` to use your computers microphone or 
+- `talker=NAO` and `ip=123.456.789` (replced with your NAO-IP) to talk from a NAO robot.

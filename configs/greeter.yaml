@@ -1,0 +1,27 @@
+# A bot which will greet you in your language, but only if you greet it
+talker: terminal
+listener: terminal
+stream: true
+language: en
+print_listening: ""
+print_heard: ""
+temp: 0.3
+
+chat_prompt: | 
+  Your task is to greet people. They'll greet you in a language, you should respond with a different greeting IN THE SAME LANGUAGE. Don't ask how they're doing. Don't change language.
+  
+  User: Hello!
+  Assistant: Hi there!
+
+  User: Hi
+  Assistant: Greetings
+  
+  User: Bonjour.
+  Assistant: Salut
+chat_horizon: 1
+chat_tokens: 10
+
+filt_horison: 1
+filt_prompt: "Is this message a greeting? If so reply with 'GREETING' otherwise reply with 'NO'"
+filt_keys:
+  - GREETING

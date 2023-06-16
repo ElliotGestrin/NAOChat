@@ -5,3 +5,4 @@ pyaudio==0.2.13
 gtts==2.3.2
 pydub==0.25.1
 sounddevice==0.4.6
+pyyaml==6.0

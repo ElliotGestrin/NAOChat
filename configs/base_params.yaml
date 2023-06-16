@@ -1,0 +1,30 @@
+# This is used to check the correct types of all base parameters, and lists them
+talker: terminal
+listener: terminal
+stream: false
+language: en
+name: Assistant
+print_listening: "Listening..."
+print_heard: "Heard: "
+
+temp: 0.5
+chat_prompt: "You are a virtual assistant"
+chat_horizon: 10
+chat_tokens: 100
+
+filt_prompt: "Who should respond to this? Reply with 'USER', 'assistant' or 'BOTH'"
+filt_horizon: 0
+filt_keys:
+  - assistant
+  - both
+filt_name: assistant
+filt_tokens: 5
+
+terminal_talker_prefix: "\nAssistant: "
+
+default_mic: true
+use_whisper: false
+terminal_listener_prefix: "User: "
+
+nao_version: V5
+ip: 123.456.789
