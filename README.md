@@ -39,9 +39,9 @@ linux > tar -xf choregraphe-suite-2.1.4.13-linux64.tar.gz
 linux > mv choregraphe-suite-2.1.4.13-linux64 choregrapher
 linux > rm choregraphe-suite-2.1.4.13-linux64.tar.gz
 ```
-Download [PyNaoQI](https://community-static.aldebaran.com/resources/2.1.4.13/sdk-python/pynaoqi-python2.7-2.1.4.13-linux32.tar.gz), uncompress the files and rename the directory `pynaoqi`. Place it in this directory.
+Download [PyNaoQI](https://community-static.aldebaran.com/resources/2.1.4.13/sdk-python/pynaoqi-python2.7-2.1.4.13-linux64.tar.gz), uncompress the files and rename the directory `pynaoqi`. Place it in this directory.
 ```
-linux > wget https://community-static.aldebaran.com/resources/2.1.4.13/sdk-python/pynaoqi-python2.7-2.1.4.13-linux32.tar.gz
+linux > wget https://community-static.aldebaran.com/resources/2.1.4.13/sdk-python/pynaoqi-python2.7-2.1.4.13-linux64.tar.gz
 linux > tar -xf pynaoqi-python2.7-2.1.4.13-linux32.tar.gz
 linux > mv pynaoqi-python2.7-2.1.4.13-linux32 pynaoqi
 linux > rm pynaoqi-python2.7-2.1.4.13-linux32.tar.gz
