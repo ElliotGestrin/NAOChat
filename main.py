@@ -2,20 +2,23 @@ from Talker import LocalTalker, TerminalTalker
 from Chatter import Chatter
 from Listener import Listener
 from NAOTalker import NAOTalker
-import warnings
-import yaml
-import sys
-import os
+import warnings, yaml, sys, os, time
 conf_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),"configs")
 kwargs = {key.lower() : value for key, value in [a.split("=") for a in sys.argv[1:]]}
 base_params = yaml.safe_load(open(f"{conf_path}/base_params.yaml")) # Used to identify correct type of parameters
 
 config = kwargs.get("config", "default")
-params = yaml.safe_load(open(f"{conf_path}/{config}.yaml"))
+if os.path.isfile(f"{conf_path}/{config}.yaml"):
+    params = yaml.safe_load(open(f"{conf_path}/{config}.yaml"))
+elif os.path.isfile(f"{conf_path}/local/{config}.yaml"):
+    params = yaml.safe_load(open(f"{conf_path}/local/{config}.yaml"))
+else:
+    raise Exception(f"Can't find {config}.yaml in configs or configs/local")
 # Overwrite any parameters set during call. Take types from: current config or base_params if not included
 for k,v in kwargs.items():
     if k in params: params[k] = type(params[k])(v)
-    elif k in base_params: params[k] = type(base_params[k])(v)
+    elif k in base_params: 
+        params[k] = type(base_params[k])(v)
     elif not k == "config": warnings.warn(f"Parameter {k} was not found in {config} or identifed as a base parameter. Ignoring")
 
 # Set up chatter
@@ -59,6 +62,7 @@ match params["listener"].lower():
         use_whisper=params.get("use_whisper",False)
     )
     case "terminal": listener = lambda : input(params.get("terminal_listener_prefix","User: "))
+    case "timer": listener = lambda : [time.sleep(params["listener_timer_delay"]), params.get("listener_timer_message", " ")][1]
     case _: raise Exception("Incorrect 'listener' specified! Use 'terminal' or 'mic'.")
 
 # Start conversation

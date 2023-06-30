@@ -14,6 +14,7 @@ You're then able to override any parameters by setting these in the same way. No
 ```
 > python3 main.py config=my_config IP=123.456.789 stream=True
 ```
+Note that to set a parameter to `False` you currently have to set it to something that in python evaluates to false, such as an empty string. 
 
 To create a new config called `my_config` simply create the file `my_config.yaml` in the `configs` directory. Begining a name with `local_`, such as `local_my_config`, will make it not tracked by git. 
 
@@ -25,7 +26,7 @@ Some parameters allow for formatting, most notably the prompts. To format these 
 
 - **talker** ["terminal"/"speaker"/"nao"]: How a response is communicated. "terminal" will give text responses in the terminal, "speaker" will use text to speech over device speaker and "nao" will use the NAO specified by the IP parameter. Not case sensitive.
 
-- **listener** ["terminal"/"mic"]: How GPT hears you. "terminal" will take text input from the terminal and "mic" will use device microphone. 
+- **listener** ["terminal"/"mic"/"timer"]: How GPT hears you. "terminal" will take text input from the terminal, "mic" will use device microphone and "timer" will pause for a duration set by 
 
 - stream [bool]: If the response from ChatGPT should be streamed line-by-line or in a single chunk.
 
@@ -36,6 +37,10 @@ Some parameters allow for formatting, most notably the prompts. To format these 
 - print_listening [str]: If truly, this will be printed when ready to receive input. 
 
 - print_heard [str]: If truly, this will be printed followed by what the perceived input after an input is received. Note that no whitespace is added before the input is printed.
+
+- *listener_timer_delay* [float]: How long, in seconds, the "timer" listener should wait before responding with the listener_timer_message
+
+- listener_timer_message [str]: The message sent by the "timer" listener
 
 - temp [float]: A value between 0 and 2 controlling how varied the responses will be. 2 is very varied, 0 is deterministic.
 
@@ -64,6 +69,8 @@ Some parameters allow for formatting, most notably the prompts. To format these 
 - nao_version ["V4"/"V5"]: Which NAO version is used. 
 
 - ip [str]: The IP adress of a NAO used
+
+- nao_sleep_time [float]: How long NAO should wait per letter when speaking before continuing
 
 ## Custom Parameters
 

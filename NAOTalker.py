@@ -4,10 +4,11 @@ import os
 import time
 
 class NAOTalker(Talker):
-    def __init__(self, ip: str, language: str = "en", version: str = "V5"):
+    def __init__(self, ip: str, language: str = "en", version: str = "V5", sleep_len: float = 0.03):
         if not version in ["V5","V4"]:
             raise ValueError(f"{version} is not a valid NAOTalker version. Use 'V5' for new white model or 'V4' for blue old.")
         self.ip = ip
+        self.sleep_len = sleep_len
         fd = os.path.dirname(os.path.realpath(__file__))
         self.talker_path = fd + f"/nao-demo/{version}/python/talker.py"
         if not os.path.exists(self.talker_path):
@@ -35,11 +36,11 @@ class NAOTalker(Talker):
         for token in ["'",'"']:
             to_say = to_say.replace(token,"")
         print(to_say)
-        sp.run(f"source python2_source.sh ; echo '{to_say}' | python2 {self.talker_path} {self.ip}",shell=True, env={},executable='/bin/bash',stdout=sp.DEVNULL)
-        time.sleep(len(to_say)/10) # As we lack response from the call, wait arbitrary time. This is a decent approximation
+        sp.run(f"source py2_nao_source.sh ; echo '{to_say}' | python2 {self.talker_path} {self.ip}",shell=True, env={},executable='/bin/bash',stdout=sp.DEVNULL)
+        time.sleep(len(to_say)*self.sleep_len) # As we lack response from the call, wait arbitrary time. This is a decent approximation
         if last:
-            sp.run(f"source py2_nao_source.sh ; echo turnoff | python2 {self.talker_path} {self.ip}",shell=True, env={},executable='/bin/bash',stdout=sp.DEVNULL)
-            sp.run(f"source py2_nao_source.sh ; echo turnon | python2 {self.talker_path} {self.ip}",shell=True, env={},executable='/bin/bash',stdout=sp.DEVNULL)        
+            sp.run(f"source py2_nao_source.sh ; echo 'turnoff' | python2 {self.talker_path} {self.ip}",shell=True, env={},executable='/bin/bash',stdout=sp.DEVNULL)
+            sp.run(f"source py2_nao_source.sh ; echo 'turnon' | python2 {self.talker_path} {self.ip}",shell=True, env={},executable='/bin/bash',stdout=sp.DEVNULL)
 
 if __name__ == "__main__":
     from Chatter import Chatter
@@ -47,9 +48,9 @@ if __name__ == "__main__":
     name = "Pepper"
     swe_intro = f"Du är den mänskliga roboten {name}. En NAO-modellrobot byggd av Softbank och programmerad av FIA Robotics. Din uppgift är att hålla en intressant konversation med en grupp människor. Du får max svara med två meningar."
     eng_intro = f"You are the humanoid robot {name}. A NAO model robot built by Softbank and programmed by FIA Robotics. Your task is to hold an interesting conversation with a group of humans. You can at most answer with two sentences"
-    chatter = Chatter(eng_intro, stream=True,chat_horison=5,filt_horison=-1,name=name)
-    listener = Listener(language="en",use_whisper=False) # Change to 'sv' for Swedish
-    talker = NAOTalker(ip="192.168.43.111",language="sv",version="V5")
+    chatter = Chatter(eng_intro, stream=True,chat_horison=5,filt_horison=-1)
+    listener = lambda:  "Hej" #Listener(language="en",use_whisper=False) # Change to 'sv' for Swedish
+    talker = NAOTalker(ip="192.168.43.234",language="sv",version="V5")
     while(True):
         print(f"Listening")
         heard = listener()

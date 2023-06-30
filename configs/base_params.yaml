@@ -24,6 +24,10 @@ terminal_talker_prefix: "\nAssistant: "
 
 default_mic: true
 use_whisper: false
+
+listener_timer_delay: 1.0
+listener_timer_message: ""
+
 terminal_listener_prefix: "User: "
 
 nao_version: V5

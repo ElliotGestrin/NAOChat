@@ -1,0 +1,21 @@
+# A configuration which will automatically generate and say various farewell greetings
+talker: terminal
+listener: timer
+listener_timer_delay: 10
+listener_timer_message:
+  "Rewrite :"
+stream: false
+language: en
+
+print_listening: ""
+print_heard: ""
+
+temp: 0.5
+chat_prompt: |
+  Your task is to rewrite  the following farewell message in a new innovative way. Don't explain yourself. Don't be too long.
+  The message is:
+
+  Thanks for coming to our exciting robot demonstration!
+  
+chat_horizon: 4
+chat_tokens: 50

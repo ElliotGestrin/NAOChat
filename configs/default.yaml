@@ -4,7 +4,7 @@ listener: terminal
 stream: true
 language: en
 name: Mia
-print_listening: ""
+print_listening: "User: "
 print_heard: ""
 mood: happy
 
