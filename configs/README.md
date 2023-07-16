@@ -66,7 +66,11 @@ Some parameters allow for formatting, most notably the prompts. To format these 
 
 - terminal_listener_prefix [str]: What the prefix is for user terminal input.
 
-- nao_version ["V4"/"V5"]: Which NAO version is used. 
+- nao_stand [bool]: If the NAO should stand up at the start of the program
+
+- nao_sleep_len [float]: How long NAO-talker waits per token in response
+
+- nao_volume [int]: The volume the NAO-talker speaks at. 0 to 100.
 
 - ip [str]: The IP adress of a NAO used
 
