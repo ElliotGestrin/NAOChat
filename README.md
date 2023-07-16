@@ -25,7 +25,7 @@ If you intend to listen to the audio through your computer, you also need to ins
 
 If you're intending to use this with a NAO a linux system is required. 
 
-First, if not already pre-installed [install Python2](https://docs.python-guide.org/starting/install/linux/). Then three directories have to be collected.
+First, if not already pre-installed [install Python2](https://docs.python-guide.org/starting/install/linux/). Then two directories have to be collected.
 
 Download [Choregrapher](https://community-static.aldebaran.com/resources/2.1.4.13/choregraphe/choregraphe-suite-2.1.4.13-linux64.tar.gz), uncompress the files and rename the directory `choregrapher`. Place it in this directory.
 ```
