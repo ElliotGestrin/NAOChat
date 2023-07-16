@@ -50,7 +50,8 @@ match params["talker"].lower():
     case "nao": talker = NAOTalker(
         ip=params["ip"],
         language=params.get("language","en"),
-        version=params.get("nao_version","V5")
+        stand=params.get("nao_stand",True),
+        sleep_len=params.get("nao_sleep_len",0.03)
     )
     case _: raise Exception("Incorrect 'talker' specified! Use 'terminal', 'speaker' or 'NAO'")
 
@@ -63,7 +64,7 @@ match params["listener"].lower():
     )
     case "terminal": listener = lambda : input(params.get("terminal_listener_prefix","User: "))
     case "timer": listener = lambda : [time.sleep(params["listener_timer_delay"]), params.get("listener_timer_message", " ")][1]
-    case _: raise Exception("Incorrect 'listener' specified! Use 'terminal' or 'mic'.")
+    case _: raise Exception("Incorrect 'listener' specified! Use 'terminal', 'timer' or 'mic'.")
 
 # Start conversation
 while True:

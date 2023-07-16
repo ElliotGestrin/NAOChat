@@ -27,11 +27,6 @@ If you're intending to use this with a NAO a linux system is required.
 
 First, if not already pre-installed [install Python2](https://docs.python-guide.org/starting/install/linux/). Then three directories have to be collected.
 
-Download [`nao-demo`](https://gitlab.liu.se/frelo91/nao-demo). Place it in this folder.
-```
-> git clone https://gitlab.liu.se/frelo91/nao-demo
-```
-
 Download [Choregrapher](https://community-static.aldebaran.com/resources/2.1.4.13/choregraphe/choregraphe-suite-2.1.4.13-linux64.tar.gz), uncompress the files and rename the directory `choregrapher`. Place it in this directory.
 ```
 linux > wget https://community-static.aldebaran.com/resources/2.1.4.13/choregraphe/choregraphe-suite-2.1.4.13-linux64.tar.gz
