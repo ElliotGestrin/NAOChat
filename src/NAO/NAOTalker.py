@@ -1,39 +1,45 @@
+import sys
+from os import path
+# Append to path to find the "Talker" class in the parent dictionary
+sys.path.append(path.dirname(path.dirname(path.realpath(__file__))))
 from Talker import Talker
 import subprocess as sp
-import os
 import time
 import iso639
 
 class NAOTalker(Talker):
-    def __init__(self, ip: str, language: str = "en", sleep_len: float = 0.03, stand=True, volume: int = 100):
+    def __init__(self, ip: str, language: str = "en", sleep_len: float = 0.03, stand=False, volume: int = 100):
+        super().__init__(language = language)
         self.ip = ip
         self.sleep_len = sleep_len
         self.language = iso639.Lang(language).name
         self.volume = volume
-        fd = os.path.dirname(os.path.realpath(__file__))
+        self.standing = stand
+        fd = path.dirname(path.realpath(__file__))
+        root_dir = path.dirname(path.dirname(path.dirname(path.realpath(__file__))))
         self.talker_path = fd + "/NAOTalkerPy2.py"
-        if not os.path.exists(self.talker_path):
+        self.src_path = fd + "/py2_nao_source.sh"
+        if not path.exists(self.talker_path):
             raise RuntimeError(f"NAOTalker can't find 'talker.py' at {self.talker_path}")
-        if not os.path.isdir(fd + "/choregrapher"):
-            raise RuntimeError(f"NAOTalker can't find Choregrapher at {fd}")
-        if not os.path.isdir(fd + "/pynaoqi"):
-            raise RuntimeError(f"NAOTalker can't find PyNaoQi at {fd}")
-        if not os.path.exists(fd + "/py2_nao_source.sh"):
-            f = open(fd + "/py2_nao_source.sh","w")
-            f.write(f"export PYTHONPATH=$PYTHONPATH:{fd}/pynaoqi\n")
-            f.write(f"export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:{fd}/choregrapher/lib")
+        if not path.isdir(root_dir + "/choregrapher"):
+            raise RuntimeError(f"NAOTalker can't find Choregrapher at {root_dir}")
+        if not path.isdir(root_dir + "/pynaoqi"):
+            raise RuntimeError(f"NAOTalker can't find PyNaoQi at {root_dir}")
+        if not path.exists(self.src_path):
+            f = open(self.src_path,"w")
+            f.write(f"export PYTHONPATH=$PYTHONPATH:{root_dir}/pynaoqi\n")
+            f.write(f"export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:{root_dir}/choregrapher/lib")
             f.close()
-        super().__init__(language = language)
         if stand: self.nao_say("stand")
 
     def __del__(self):
-        self.nao_say("sit")
+        if self.standing: self.nao_say("sit")
 
     def nao_say(self, to_say):
         for token in ["'",'"']:
             to_say = to_say.replace(token,"")
         sp.run(
-            f"source py2_nao_source.sh ; echo '{to_say}' | python2 {self.talker_path} {self.ip} {self.language} {self.volume}",
+            f"source {self.src_path} ; echo '{to_say}' | python2 {self.talker_path} {self.ip} {self.language} {self.volume}",
             shell=True, env={},executable='/bin/bash',stdout=sp.DEVNULL
         )
 
@@ -48,10 +54,11 @@ class NAOTalker(Talker):
         """
         print(to_say)
         self.nao_say(to_say)
-        time.sleep(len(to_say)*self.sleep_len) # As we lack response from the call, wait arbitrary time. This is a decent approximation
+        time.sleep(len(to_say.strip())*self.sleep_len) # As we lack response from the call, wait arbitrary time. This is a decent approximation
         if last:
             self.nao_say('turnoff')
             self.nao_say('turnon')
+            if self.standing: self.nao_say('e')
 
 if __name__ == "__main__":
     from Chatter import Chatter

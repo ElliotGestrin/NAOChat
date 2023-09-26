@@ -30,7 +30,7 @@ listener_timer_message: ""
 
 terminal_listener_prefix: "User: "
 
-nao_stand: true
+nao_stand: false
 nao_sleep_len: 0.03
 nao_volume: 100
 ip: 123.456.789

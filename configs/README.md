@@ -48,7 +48,7 @@ Some parameters allow for formatting, most notably the prompts. To format these 
 
 - chat_horizon [int]: The number of messages ChatGPT sees when responding. 1 means only the last message. ChatGPT:s own responses are counted.
 
-- chat_token [int]: The maximum number of tokens ChatGPT can respond with. A hard cuttoff will be seen if reached.
+- chat_token [int]: The maximum n192.168.43.234umber of tokens ChatGPT can respond with. A hard cuttoff will be seen if reached.
 
 - *filt_prompt* [str]: The prompt given to the filter. Obligatory if filt_horizon > 0. Formattable. 
 
@@ -60,13 +60,13 @@ Some parameters allow for formatting, most notably the prompts. To format these 
 
 - filt_token [int]: The number of tokens the filter can respond with. Hard cuttoff if reached. 
 
-- default_mic [bool]: If the default device microphone should be used when listener is "mic". If false, a choice of mic is done via terminal.
+- default_mic [bool]: If the default device microphone is used when the listener is "mic". If false, a choice of mic is done via terminal.
 
 - use_whisper [bool]: If the listener should use OpenAI:s Whisper when doing speech to text. If false, google text-to-speech is used. 
 
 - terminal_listener_prefix [str]: What the prefix is for user terminal input.
 
-- nao_stand [bool]: If the NAO should stand up at the start of the program
+- nao_stand [bool]: If the NAO should stand up at the start of the program. It'll automatically sit down when the program closes. 
 
 - nao_sleep_len [float]: How long NAO-talker waits per token in response
 

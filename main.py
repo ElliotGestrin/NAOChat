@@ -1,7 +1,7 @@
-from Talker import LocalTalker, TerminalTalker
-from Chatter import Chatter
-from Listener import Listener
-from NAOTalker import NAOTalker
+from src.Talker import LocalTalker, TerminalTalker
+from src.Chatter import Chatter
+from src.Listener import Listener
+from src.NAO.NAOTalker import NAOTalker
 import warnings, yaml, sys, os, time
 conf_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),"configs")
 kwargs = {key.lower() : value for key, value in [a.split("=") for a in sys.argv[1:]]}
@@ -50,7 +50,7 @@ match params["talker"].lower():
     case "nao": talker = NAOTalker(
         ip=params["ip"],
         language=params.get("language","en"),
-        stand=params.get("nao_stand",True),
+        stand=params.get("nao_stand",False),
         sleep_len=params.get("nao_sleep_len",0.03),
         volume=params.get("nao_volume",100)
     )

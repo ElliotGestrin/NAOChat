@@ -76,6 +76,12 @@ class Talker(cmd.Cmd, object):
             print("Error creating proxy to ALLeds")
             print(e.message)
             exit(0)
+        try:
+            self._tracker = ALProxy("ALTracker", robot, 9559)
+        except Exception, e:
+            print("Error creating proxy to ALTracker")
+            print(e.message)
+            exit(0)
 
 
             
@@ -92,7 +98,6 @@ class Talker(cmd.Cmd, object):
         self._talk.declareTagForAnimations({
             "vacuum": ["animations/Stand/Waiting/Vacuum_1"],
             "drivecar": ["animations/Stand/Waiting/DriveCar_1"],
-            "headbang": ["animations/Stand/Waiting/Headbang_1"],
             "heat": ["animations/Stand/Reactions/Heat"],
             "lightshine": ["animations/Stand/Reactions/LightShine"],
             "seesomething": ["animations/Stand/Reactions/SeeSomething"],
@@ -108,7 +113,6 @@ class Talker(cmd.Cmd, object):
             "happybirthday": ["animations/Stand/Waiting/HappyBirthday_1"],
             "helicopter": ["animations/Stand/Waiting/Helicopter"],
             "hideeyes": ["animations/Stand/Waiting/HideEyes"],
-            "spaceshuttle": ["animations/Stand/Waiting/SpaceShuttle_1"],
             "airguitar": ["animations/Stand/Waiting/AirGuitar_1"],
             "applause": ["animations/Gestures/Applause_1"],
             "laugh": ["animations/Emotions/Positive/Laugh_1", "animations/Emotions/Positive/Laugh_2", "animations/Emotions/Positive/Laugh_3"],
@@ -190,22 +194,6 @@ class Talker(cmd.Cmd, object):
     def help_drivecar(self):
         print("Drivecar")
 
-    def do_headbang(self, line):
-        self._talk.post.say(self._modifier + "^startTag(headbang)" + str(line) + " ^waitTag(headbang)")
-    def help_headbang(self):
-        print("Headbang")
-
-    def do_heat(self, line):
-        self._talk.post.say(self._modifier + "^startTag(headbang)" + str(line) + " ^waitTag(headbang)")
-    def do_headbang(self, line):
-        self._talk.post.say(self._modifier + "^startTag(headbang)" + str(line) + " ^waitTag(headbang)")
-
-
-    def do_spaceshuttle(self, line):
-        self._talk.post.say(self._modifier + "^startTag(spaceshuttle)" + str(line) + " ^waitTag(spaceshuttle)")
-    def help_spaceshuttle(self):
-        print("Spaceshuttle")
-
     def do_airguitar(self, line):
         self._talk.post.say(self._modifier + "^startTag(airguitar)" + str(line) + " ^waitTag(airguitar)")
     def help_airguitar(self):
@@ -227,9 +215,9 @@ class Talker(cmd.Cmd, object):
         print("Sneeze")
 
 
-    def do_please(self, line):
+    def do_uwu(self, line):
         self.do_p(line)
-    def help_please(self):
+    def help_uwu(self):
         self.help_p()
     def do_p(self, line): # Please_1
         self._talk.post.say(self._modifier + "^startTag(please) " + str(line) + " ^waitTag(please)")
@@ -253,21 +241,6 @@ class Talker(cmd.Cmd, object):
         self._talk.post.say(self._modifier + "^startTag(explain) " + str(line) + " ^waitTag(explain)")
     def help_e(self):
         print("Explain animation")
-
-
-
-    def do_intro(self, line):
-        self._talk.say(self._modifier + "^startTag(hi) Hej hej! ^waitTag(hi)")
-        time.sleep(0.7)
-        self._talk.say(self._modifier + "^startTag(explain) Jag är en liten råbott ^waitTag(explain)")
-        self._talk.say(self._modifier + "^startTag(undetermined) Skulle vi inte få träffa fredrik, kanske ni tänker? ^waitTag(undetermined)")
-        time.sleep(0.8)
-        self._talk.say(self._modifier + "^startTag(explain) Jag kollade upp tåg tider på Internet. ^waitTag(explain)")
-        time.sleep(1)
-        self._talk.say(self._modifier + "^startTag(explain) och han skulle inte hinna till er nu på morgonen. ^waitTag(explain)")
-        time.sleep(0.8)
-        self._talk.say(self._modifier + "^startTag(me) Låt mig presentera Fredrik Löfgren via länk!  ^waitTag(me)")
-
 
     def do_bow(self, line): #BowShort_1
         self._talk.post.say(self._modifier + "^startTag(bow) " + str(line) + " ^waitTag(bow)")
@@ -309,12 +282,40 @@ class Talker(cmd.Cmd, object):
         self.do_jingle(line)
     def do_dance(self, line):
         self.do_gangnam(line)
-    def do_stop(self, line):
-        self._behavior.stopAllBehaviors()
 
-        
+    def do_point(self,line):
+        self.do_pointr(line)
+    def do_pointr(self, line):
+        line = line.lower()
+        if "down" in line: z = -0.1
+        elif "up" in line: z = 1
+        else: z = 0.5
+        if "right" in line: y = -0.5
+        elif "left" in line: y = 0.5
+        else: y = 0
+        self._tracker.pointAt("RArm", [1,y,z], 2, 0.4)
+    def do_pointl(self, line):
+        line = line.lower()
+        if "down" in line: z = -0.1
+        elif "up" in line: z = 1
+        else: z = 0.5
+        if "right" in line: y = -0.5
+        elif "left" in line: y = 0.5
+        else: y = 0
+        self._tracker.pointAt("LArm", [1,y,z], 2, 0.4)
+    def do_pointb(self, line):
+        line = line.lower()
+        if "down" in line: z = -0.1
+        elif "up" in line: z = 1
+        else: z = 0.5
+        if "right" in line: y = -0.5
+        elif "left" in line: y = 0.5
+        else: y = 0
+        self._tracker.pointAt("Arms", [1,y,z], 2, 0.4)
+    def do_gylf(self,line):
+        self.do_w("Din gylf är öppen!")
+        self.do_pointr("down right")
 
-        
     def do_exit(self, line):
         self._posture.goToPosture("Sit",0.8)
         self._motion.setStiffnesses("Body", 0.0)
@@ -322,6 +323,8 @@ class Talker(cmd.Cmd, object):
     def help_exit(self):
         print("Exit the program")
 
+    def do_stop(self, line):
+        self._behavior.stopAllBehaviors()
     def do_sit(self, line):
         self._posture.goToPosture("Sit",0.8)
         self._motion.setStiffnesses("Body", 0.0)
@@ -360,13 +363,13 @@ class Talker(cmd.Cmd, object):
 
 if __name__ == "__main__":
     if len(sys.argv) <= 1:
-        print("usage python talker.py ROBOT_IP")
+        print("usage python talker.py ROBOT_IP Language Volume")
     else:
         global WALKING
         global DEFAULT_QUIET
         ip = sys.argv[1]
-        if len(sys.argv) >= 2: language = sys.argv[2]
-        if len(sys.argv) >= 3: volume = int(sys.argv[2])
+        language = sys.argv[2].capitalize() if len(sys.argv) >= 3 else "English"
+        volume = int(sys.argv[3]) if len(sys.argv) >= 4 else 100
         WALKING = "walking" in sys.argv
         DEFAULT_QUIET = "quiet" in sys.argv
         
