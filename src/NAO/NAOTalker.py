@@ -39,7 +39,7 @@ class NAOTalker(Talker):
         for token in ["'",'"']:
             to_say = to_say.replace(token,"")
         sp.run(
-            f"source {self.src_path} ; echo '{to_say}' | python2 {self.talker_path} {self.ip} {self.language} {self.volume}",
+            f"source {self.src_path} ; echo '{to_say}' | tr -d '\n' | python2 {self.talker_path} {self.ip} {self.language} {self.volume}",
             shell=True, env={},executable='/bin/bash',stdout=sp.DEVNULL
         )
 

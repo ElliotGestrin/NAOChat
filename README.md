@@ -4,7 +4,7 @@ This is a repo for performing natural language conversations via ChatGPT through
 
 ## Setup
 
-Create a new python virtual environemnt using python >= 3.8 and install the requirements. This can be done via the following terminal commands:
+Create a new python virtual environemnt using python >= 3.10 and install the requirements. This can be done via the following terminal commands:
 ```
 # Windows
 py -3.11 -m venv env
@@ -22,7 +22,7 @@ To later exit the python environment, use the terminal command `deactivate`.
 
 Go to https://platform.openai.com/account/api-keys and create a new API key. Save this key in a new file called `openai.key`.
 
-If you intend to listen to the audio through your computer, you also need to install FFmpeg. See how on [their webpage](https://ffmpeg.org).
+If you intend to listen to the audio through yofur computer, you also need to install FFmpeg. See how on [their webpage](https://ffmpeg.org).
 
 ### NAO Setup
 

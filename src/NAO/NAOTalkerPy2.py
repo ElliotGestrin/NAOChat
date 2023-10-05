@@ -287,7 +287,7 @@ class Talker(cmd.Cmd, object):
         self.do_pointr(line)
     def do_pointr(self, line):
         line = line.lower()
-        if "down" in line: z = -0.1
+        if "down" in line: z = 0.15#-0.1
         elif "up" in line: z = 1
         else: z = 0.5
         if "right" in line: y = -0.5
@@ -312,9 +312,63 @@ class Talker(cmd.Cmd, object):
         elif "left" in line: y = 0.5
         else: y = 0
         self._tracker.pointAt("Arms", [1,y,z], 2, 0.4)
+
+    
+    def do_look(self, line):
+        line = line.lower()
+        if "down" in line: z = -0.1
+        elif "up" in line: z = 1
+        else: z = 0.6
+        if "right" in line: y = -0.5
+        elif "left" in line: y = 1
+        else: y = 0
+        self._tracker.lookAt([1,y,z], 2, 0.4,False)
+
     def do_gylf(self,line):
+        self.do_look("right")
+        time.sleep(0.5)
         self.do_w("Din gylf är öppen!")
         self.do_pointr("down right")
+
+    def do_highfive(self,line):
+        line = line.lower()
+        language = self._tts.getLanguage()
+        self._tts.setLanguage("English")
+        if not "right" in line:
+            arm = "LArm"
+            y = 0.5
+            arm_text = "left"
+        else:
+            arm = "RArm"
+            arm_text = "right"
+            y = -0.5
+        self.do_closehand(arm_text)
+        self.do_w("Highfive!")
+        self._tracker.pointAt(arm, [0.35,y,2], 2, 0.2)
+        self.do_openhand(arm_text)
+        self._tts.setLanguage(language)
+
+    def do_eng(self,line):
+        language = self._tts.getLanguage()
+        self._tts.setLanguage("English")
+        time.sleep(0.25)
+        self.default(line)
+        self._tts.setLanguage(language)
+
+    def do_swe(self,line):
+        language = self._tts.getLanguage()
+        self._tts.setLanguage("Swedish")
+        time.sleep(0.25)
+        self.default(line)
+        self._tts.setLanguage(language)
+
+    def do_openhand(self,line):
+        hand = "LHand" if "left" in line.lower() else "RHand"
+        self._motion.openHand(hand)
+    
+    def do_closehand(self,line):
+        hand = "LHand" if "left" in line.lower() else "RHand"
+        self._motion.closeHand(hand)
 
     def do_exit(self, line):
         self._posture.goToPosture("Sit",0.8)
@@ -341,10 +395,35 @@ class Talker(cmd.Cmd, object):
 
     def do_turnoff(self, line):
         self._leds.off("AllLeds")
-        
-        
+
+    def do_walk(self, line):
+        self.do_walkf(line)
+
+    def do_facetrack(self, line):
+        self.do_trackface(line)
+
+    def do_trackface(self, line):
+        self._motion.wakeUp()
+        self._tracker.registerTarget("Face", 0.1) # 0.1 is face size
+        self._tracker.track("Face")
+
+    def do_stoptrack(self, line):
+        self._tracker.stopTracker()
+        self._tracker.unregisterAllTargets()
+
     def do_walkf(self, line):
-	    self._motion.walkTo(1,0,0)
+        dist = float(line) if line else 0.1
+        self._motion.walkTo(dist,0,0)
+
+    def do_walkb(self, line):
+        dist = float(line) if line else 0.1
+        self._motion.walkTo(-dist,0,0)
+
+    def do_turn(self,line):
+        line = line.lower()
+        turn = 90 if line == "right" else -90 if line == "left" else float(line)
+        rad = -3.14 * turn/180
+        self._motion.walkTo(0,0,rad)
 
     def do_EOF(self, line):
         return True
