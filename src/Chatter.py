@@ -1,5 +1,4 @@
 import openai
-from openai.error import ServiceUnavailableError
 import time
 
 class Chatter:
@@ -10,10 +9,11 @@ class Chatter:
             temp: float = 0.5,
             stream = False, 
             filt_prompt: str = "Who should respond to this? Reply with 'USER', 'ASSISTANT' or 'BOTH'",
-            filt_horison: int = 1, 
+            filt_horizon: int = 1, 
             filt_name: str = "asssistant",
             filt_keys: list[str] = ["ASSISTANT","BOTH"],
-            filt_tokens: int = 5):
+            filt_tokens: int = 5,
+            chat_name: str = "assistant"):
         """
         Creates a Chatter object for natural communication with ChatGPT
 
@@ -24,10 +24,11 @@ class Chatter:
             temp (float): How varied the responses should be. 0 = deterministic, 2 = very random.
             stream (bool): If the answers should be yielded in tokens or returned as a full string.
             filt_prompt (str): The prompt for the filter which decides if a response should be given.
-            filt_horison (int): How many messages are used to decide if to respond. A value <= 0 turns of filtering.
+            filt_horizon (int): How many messages are used to decide if to respond. A value <= 0 turns of filtering.
             filt_name (str): What the chatter is called when deciding to filter. The user is always called 'user'.
             filt_keys (list[str]): If any of the keys are returned by filter, chatter will respond.
             filt_tokens (int): How many tokens the filter might return. Will be a hard cut if reached. 
+            chat_name (str): What the chatter is called by itself when stitching prompts.
         """
         if not openai.api_key:
             openai.api_key = open("openai.key").read().strip()
@@ -38,11 +39,12 @@ class Chatter:
         self.chat_horison = chat_horison
         self.chat_tokens = chat_tokens
         self.temp = temp
+        self.name = chat_name
         self.filt_base = [{
             "role": "system", 
             "content": filt_prompt
             } ]
-        self.filt_horison = filt_horison
+        self.filt_horizon = filt_horizon
         self.filt_name = filt_name
         self.filt_keys = filt_keys
         self.filt_tokens = filt_tokens
@@ -63,7 +65,7 @@ class Chatter:
                 stream = False
             ).choices[0].message.content
             return response
-        except ServiceUnavailableError:
+        except openai.APITimeoutError:
             time.sleep(0.1)
             return self.get_response()
 
@@ -84,7 +86,7 @@ class Chatter:
                 stream = True
             ):
                 yield chunk.choices[0].delta.get("content","")
-        except ServiceUnavailableError:
+        except openai.APITimeoutError:
             time.sleep(0.1)
             return self.stream_response()
     
@@ -92,15 +94,15 @@ class Chatter:
         """
         Concludes if Chatter should reply to the last received message.
         Does this via evaluating with filt_prompt. Should respond if any filt_key is returned. 
-        Based on the last filt_horison messages. Setting filt_horison <= 0 turns of filtering
+        Based on the last filt_horizon messages. Setting filt_horizon <= 0 turns of filtering
 
         Returns:
             bool : Wheter to respond or not
         """
         try:
-            if(self.filt_horison <= 0): return True
+            if(self.filt_horizon <= 0): return True
             joined_messages = "\n ".join(
-                [(m["role"] if m["role"] != "assistant" else self.name) + ": " + m["content"] for m in self.messages[-min(len(self.messages), self.filt_horison):]]
+                [(m["role"] if m["role"] != "assistant" else self.name) + ": " + m["content"] for m in self.messages[-min(len(self.messages), self.filt_horizon):]]
             )
             response = openai.ChatCompletion.create(
                 model=self.NLP_model, 
@@ -109,7 +111,7 @@ class Chatter:
                 max_tokens=self.filt_tokens
             ).choices[0].message.content
             return any([key.upper() in response.upper() for key in self.filt_keys])
-        except ServiceUnavailableError:
+        except openai.APITimeoutError:
             time.sleep(0.1)
             return self.should_respond()
     
@@ -117,7 +119,7 @@ class Chatter:
         
         """
         Returns a reply to message based on the last chat_horison messages
-        if it concludes it should based on the last filt_horison messages
+        if it concludes it should based on the last filt_horizon messages
 
         Returns one of:
             str/Generator[str,None,None] : The response or a genereator thereof if stream is true. Empty if no response

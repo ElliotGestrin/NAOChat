@@ -31,11 +31,12 @@ chatter = Chatter(
     chat_tokens=params.get("chat_tokens",100),
     temp=params.get("temp",0.5),
     stream=params.get("stream",False),
-    filt_prompt=params["filt_prompt"].format(**params) if params.get("filt_horison",0) > 0 else "",
-    filt_horison=params.get("filt_horison",0),
+    filt_prompt=params["filt_prompt"].format(**params) if params.get("filt_horizon",0) > 0 else "",
+    filt_horizon=params.get("filt_horizon",0),
     filt_name=params.get("filt_name", "assistant").format(**params),
-    filt_keys=params["filt_keys"] if params.get("filt_horison",0) > 0 else "",
+    filt_keys=params["filt_keys"] if params.get("filt_horizon",0) > 0 else "",
     filt_tokens=params.get("filt_tokens",5),
+    chat_name=params.get("name", "assistant").format(**params)
 )
 
 # Set up talker

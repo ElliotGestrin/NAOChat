@@ -66,7 +66,7 @@ if __name__ == "__main__":
     name = "Pepper"
     swe_intro = f"Du är den mänskliga roboten {name}. En NAO-modellrobot byggd av Softbank och programmerad av FIA Robotics. Din uppgift är att hålla en intressant konversation med en grupp människor. Du får max svara med två meningar."
     eng_intro = f"You are the humanoid robot {name}. A NAO model robot built by Softbank and programmed by FIA Robotics. Your task is to hold an interesting conversation with a group of humans. You can at most answer with two sentences"
-    chatter = Chatter(eng_intro, stream=True,chat_horison=5,filt_horison=-1)
+    chatter = Chatter(eng_intro, stream=True,chat_horison=5,filt_horizon=-1)
     listener = Listener(language="en",use_whisper=False) # Change to 'sv' for Swedish
     talker = NAOTalker(ip="192.168.43.234",language="sv",version="V5")
     while(True):

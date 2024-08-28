@@ -15,7 +15,7 @@ pip install -r requirements.txt
 # Linux
 python3 -m venv env
 source env/bin/activate
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
 
 To later exit the python environment, use the terminal command `deactivate`. 
